@@ -1,10 +1,9 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState} from 'react';
 import Header from "./Header";
 import Main from "./Main";
 import PopupWithForm from "./PopupWithForm";
 import ImagePopup from "./ImagePopup"
 import Footer from "./Footer";
-//import './App.css';
 
 
 
@@ -12,6 +11,7 @@ function App() {
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false);
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false);
   const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = useState(false);
+  const [selectedCard, setSelectedCard] = useState(null);
 
 
   function handleEditAvatarClick() {
@@ -26,11 +26,15 @@ function App() {
   setIsAddPlacePopupOpen(true);
   }
 
+  function handleCardClick(card) {
+  setSelectedCard(card);
+  }
+
   function closeAllPopups() {
     setIsEditAvatarPopupOpen(false);
     setIsEditProfilePopupOpen(false);
     setIsAddPlacePopupOpen(false);
-  
+    setSelectedCard(null)
   }
 
   return (
@@ -88,7 +92,7 @@ function App() {
       <PopupWithForm />
       
       {/* Модалка открытия картинки */}
-      <ImagePopup />
+      <ImagePopup card={selectedCard}  onClose={closeAllPopups}/>
 
   </div>
   );
