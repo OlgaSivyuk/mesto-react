@@ -11,7 +11,7 @@ function App() {
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false);
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false);
   const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = useState(false);
-  const [selectedCard, setSelectedCard] = useState(null);
+  const [selectedCard, setSelectedCard] = useState(false);
 
 
   function handleEditAvatarClick() {
@@ -23,18 +23,19 @@ function App() {
   }
 
   function handleAddPlaceClick() {
-  setIsAddPlacePopupOpen(true);
+    setIsAddPlacePopupOpen(true);
   }
 
-  function handleCardClick(card) {
-  setSelectedCard(card);
+  function handleCardClick() {
+    //console.log(selectedCard)
+    setSelectedCard(true);
   }
 
   function closeAllPopups() {
     setIsEditAvatarPopupOpen(false);
     setIsEditProfilePopupOpen(false);
     setIsAddPlacePopupOpen(false);
-    setSelectedCard(null)
+    setSelectedCard(false)
   }
 
   return (
@@ -43,6 +44,7 @@ function App() {
       <Main onEditAvatar={handleEditAvatarClick}
             onEditProfile={handleEditProfileClick} 
             onAddPlace={handleAddPlaceClick} 
+            onCardClick={handleCardClick}
             />
       <Footer />
       {/* Модалка редактирования профиля */}
@@ -89,7 +91,11 @@ function App() {
       />
 
       {/* Модалка удаления карточки */}
-      <PopupWithForm />
+      <PopupWithForm name="delete-card" 
+        title="Вы уверены?" id="form-delete-card" formName="delete-place-card"
+        buttonText="Да"
+        onClose={closeAllPopups}
+      />
       
       {/* Модалка открытия картинки */}
       <ImagePopup card={selectedCard}  onClose={closeAllPopups}/>
