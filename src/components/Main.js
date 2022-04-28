@@ -38,25 +38,6 @@ function Main({ onEditAvatar, onEditProfile, onAddPlace, onCardClick }) {
       .catch(err => console.log(err));
     }, [])
 
-    // useEffect(() => {
-    //   Promise.all([api.getProfile(), api.getUsersCards()])
-    //     .then(([userData, cardList]) => {
-    //       setUserName(userData.name);
-    //       setUserDescription(userData.about);
-    //       setUserAvatar(userData.avatar)
-
-    //       const usersCard = cardList.map(card => ({ 
-    //         name: card.name, 
-    //         link: card.link,
-    //         likes: card.likes,
-    //         cardId: card._id,
-    //       })) 
-    //       setCards(usersCard)
-    //     })
-    //     .catch(err => console.log(err));
-    // }, [])
-
-
     return (
       <main className="content">
         <section className="profile">
@@ -89,3 +70,23 @@ function Main({ onEditAvatar, onEditProfile, onAddPlace, onCardClick }) {
   }
   
   export default Main;
+
+
+  // если перенести код из прошлой работы
+  // useEffect(() => {
+    //   Promise.all([api.getProfile(), api.getUsersCards()])
+    //     .then(([userData, cardList]) => {
+    //       setUserName(userData.name);
+    //       setUserDescription(userData.about);
+    //       setUserAvatar(userData.avatar)
+
+    //       const usersCard = cardList.map(card => ({ 
+    //         name: card.name, 
+    //         link: card.link,
+    //         likes: card.likes,
+    //         cardId: card._id,
+    //       })) 
+    //       setCards(usersCard)
+    //     })
+    //     .catch(err => console.log(err));
+    // }, [])
