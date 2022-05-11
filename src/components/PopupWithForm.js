@@ -11,8 +11,8 @@ function PopupWithForm({ name, title, id, formName, buttonText, children, onClos
           id={id}
           autoComplete="off"
           name={formName}
-          noValidate >
-
+          noValidate >  {/* рекомендуется убрать noValidate чтобы работала внутренняя валидация браузера, и не было возможности отправить невалидные данные на сервер */}
+         
           {children}
 
           <button type="submit" className="popup__submit">

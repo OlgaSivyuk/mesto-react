@@ -1,15 +1,28 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { api } from "../utils/Api.js";
 import Header from "./Header";
 import Main from "./Main";
 import PopupWithForm from "./PopupWithForm";
 import ImagePopup from "./ImagePopup";
 import Footer from "./Footer";
+import { CurrentUserContext } from '../contexts/CurrentUserContext';
 
 function App() {
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false);
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false);
   const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = useState(false);
   const [selectedCard, setSelectedCard] = useState(null);
+  const [currentUser, setCurrentUser] = useState({}); // ПР11 создали переменную состояния currentUser
+
+  useEffect(() => {
+      api
+        .getProfile()
+        .then((userData) => {
+          setCurrentUser(userData)
+        })
+        .catch((err) => console.log(err));
+    }, []); // ПР11 создали эффект при монтировании, который будет вызывать api.getUserInfo и обновлять стейт-переменную из полученного значения
+
 
   function handleEditAvatarClick() {
     setIsEditAvatarPopupOpen(true);
@@ -36,6 +49,7 @@ function App() {
   }
 
   return (
+    <CurrentUserContext.Provider value={currentUser}>
     <div className="page">
       <Header />
       <Main
@@ -157,6 +171,7 @@ function App() {
       {/* Модалка открытия картинки */}
       <ImagePopup card={selectedCard} onClose={closeAllPopups} />
     </div>
+    </CurrentUserContext.Provider>
   );
 }
 

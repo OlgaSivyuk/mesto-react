@@ -1,40 +1,71 @@
 import React, { useState, useEffect } from "react";
 import { api } from "../utils/Api.js";
 import Card from "./Card.js";
+import { CurrentUserContext } from '../contexts/CurrentUserContext';
 
 function Main({ onEditAvatar, onEditProfile, onAddPlace, onCardClick }) {
-  const [userName, setUserName] = useState("");
-  const [userDescription, setUserDescription] = useState("");
-  const [userAvatar, setUserAvatar] = useState("");
+  // const [userName, setUserName] = useState("");
+  // const [userDescription, setUserDescription] = useState("");
+  // const [userAvatar, setUserAvatar] = useState("");
   const [cards, setCards] = useState([]); // добавляем переменную стейта с пустым массивом в качестве переменной по умолчанию
-
+  const currentUser = React.useContext(CurrentUserContext); // Подписываемся на контекст CurrentUserContext
   
-useEffect(() => {
-  Promise.all([api.getProfile(), api.getUsersCards()])
-    .then(([userData, cardList]) => {
-      setUserName(userData.name);
-      setUserDescription(userData.about);
-      setUserAvatar(userData.avatar)
+// useEffect(() => {
+//   Promise.all([api.getProfile(), api.getUsersCards()])
+//     .then(([userData, cardList]) => {
+//       setUserName(userData.name);
+//       setUserDescription(userData.about);
+//       setUserAvatar(userData.avatar)
 
-      const usersCard = cardList.map((card) => {
-        return {
-          name: card.name,
-          link: card.link,
-          likes: card.likes,
-          cardId: card._id,
-        }
+//       const usersCard = cardList.map((card) => {
+//         return {
+//           name: card.name,
+//           link: card.link,
+//           likes: card.likes,
+//           cardId: card._id,
+//         }
+//       })
+//       setCards(usersCard)
+//     })
+//     .catch(err => console.log(err));
+// }, [])
+
+// useEffect(() => {
+//     api
+//       .getProfile()
+//       .then((res) => {
+//         setUserName(res.name);
+//         setUserDescription(res.about);
+//         setUserAvatar(res.avatar);
+//       })
+//       .catch((err) => console.log(err));
+//   }, []);
+
+  useEffect(() => {
+    api
+      .getUsersCards()
+      .then((cardList) => {
+        //console.log("res", res)
+        const usersCard = cardList.map((card) => {
+          return {
+            name: card.name,
+            link: card.link,
+            likes: card.likes,
+            cardId: card._id,
+          };
+        });
+        //console.log('usersCard', usersCard)
+        setCards(usersCard);
       })
-      setCards(usersCard)
-    })
-    .catch(err => console.log(err));
-}, [])
+      .catch((err) => console.log(err));
+  }, []);
 
   return (
     <main className="content">
       <section className="profile">
         <div className="profile__avatar-img">
           <img
-            src={userAvatar}
+            src={currentUser.userAvatar}
             alt="Фото профиля"
             className="profile__avatar"
           />
@@ -46,7 +77,7 @@ useEffect(() => {
         </div>
         <div className="profile__info">
           <div className="profile__top-row">
-            <h1 className="profile__name">{userName}</h1>
+            <h1 className="profile__name">{currentUser.userName}</h1>
             <button
               type="button"
               id="open_popup"
@@ -55,7 +86,7 @@ useEffect(() => {
               onClick={onEditProfile}
             ></button>
           </div>
-          <p className="profile__bio">{userDescription}</p>
+          <p className="profile__bio">{currentUser.userDescription}</p>
         </div>
         <button
           type="button"
@@ -78,32 +109,4 @@ useEffect(() => {
 
 export default Main;
 
-// useEffect(() => {
-  //   api
-  //     .getProfile()
-  //     .then((res) => {
-  //       setUserName(res.name);
-  //       setUserDescription(res.about);
-  //       setUserAvatar(res.avatar);
-  //     })
-  //     .catch((err) => console.log(err));
-  // }, []);
 
-  // useEffect(() => {
-  //   api
-  //     .getUsersCards()
-  //     .then((cardList) => {
-  //       //console.log("res", res)
-  //       const usersCard = cardList.map((card) => {
-  //         return {
-  //           name: card.name,
-  //           link: card.link,
-  //           likes: card.likes,
-  //           cardId: card._id,
-  //         };
-  //       });
-  //       //console.log('usersCard', usersCard)
-  //       setCards(usersCard);
-  //     })
-  //     .catch((err) => console.log(err));
-  // }, []);
