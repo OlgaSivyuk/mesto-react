@@ -13,15 +13,39 @@ function App() {
   const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = useState(false);
   const [selectedCard, setSelectedCard] = useState(null);
   const [currentUser, setCurrentUser] = useState({}); // ПР11 создали переменную состояния currentUser
+  const [cards, setCards] = useState([]); // ПР11 перенесла карточки в корневой компонент
 
   useEffect(() => {
       api
         .getProfile()
         .then((userData) => {
+          //console.log("res", userData)
           setCurrentUser(userData)
         })
         .catch((err) => console.log(err));
     }, []); // ПР11 создали эффект при монтировании, который будет вызывать api.getUserInfo и обновлять стейт-переменную из полученного значения
+
+
+
+  useEffect(() => {
+    api
+      .getUsersCards()
+      .then((cardList) => {
+        //console.log("res", res)
+        const usersCard = cardList.map((card) => {
+          return {
+            name: card.name,
+            link: card.link,
+            likes: card.likes,
+            cardId: card._id,
+            ownerId: card.owner._id,
+          };
+        });
+        //console.log('usersCard', usersCard)
+        setCards(usersCard);
+      })
+      .catch((err) => console.log(err));
+  }, []);
 
 
   function handleEditAvatarClick() {
@@ -41,6 +65,36 @@ function App() {
     setSelectedCard(card);
   }
 
+  function handleCardLike(card) { // Снова проверяем, есть ли уже лайк на этой карточке
+    const isLiked = card.likes.some(item => item._id === currentUser._id); // Отправляем запрос в API и получаем обновлённые данные карточки
+    
+    if (isLiked){ //если карточка с лайком ==> удали лайк
+      api.deleteLike(card.cardId)
+      .then(newCard => { 
+        setCards((state) => state.map((item) => 
+        item._id === card.cardId ? newCard : item
+        ));
+      })
+      .catch(err => console.log(err))
+    } else { // если лайка нет ==> поставь лайк
+        api.addLike(card.cardId)
+          .then(newCard => { 
+            setCards((state) => state.map((item) => 
+            item._id === card.cardId ? newCard : item
+            ));
+          })
+          .catch(err => console.log(err))
+      } 
+  }
+    // api
+    //   .addLike(cardId, !isLiked)
+    //   .then((newCard) => {
+    //   setCards((state) => state.map((c) => 
+    //   c._id === cardId ? newCard : c
+    //   ));
+    // });
+  
+
   function closeAllPopups() {
     setIsEditAvatarPopupOpen(false);
     setIsEditProfilePopupOpen(false);
@@ -57,6 +111,8 @@ function App() {
         onEditProfile={handleEditProfileClick}
         onAddPlace={handleAddPlaceClick}
         onCardClick={handleCardClick}
+        onCardLike={handleCardLike}
+        cards={cards}
       />
       <Footer />
       {/* Модалка редактирования профиля */}

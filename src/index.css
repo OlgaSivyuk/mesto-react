@@ -28,6 +28,7 @@
 @import url(./blocks/place/__like/_active/place__like_active.css);
 @import url(./blocks/place/__like-count/place__like-count.css); /* подсчет лайков */
 @import url(./blocks/place/__delete/place__delete.css);
+@import url(./blocks/place/__delete/_hidden/place__delete_hidden.css); /* ПР11 прячем корзину */
 
 /* футтер */
 @import url(./blocks/footer/__tag/footer__tag.css);
