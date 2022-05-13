@@ -19,7 +19,7 @@ function App() {
       api
         .getProfile()
         .then((userData) => {
-          console.log("res", userData)
+          //console.log("res", userData)
           setCurrentUser({...userData,
             userName: userData.name,
             userDescription: userData.about,
@@ -52,6 +52,43 @@ function App() {
   }, []);
 
 
+  function handleCardLike(card) { // Снова проверяем, есть ли уже лайк на этой карточке
+    const isLiked = card.likes.some(user => user._id === currentUser._id); // Отправляем запрос в API и получаем обновлённые данные карточки
+    
+  //   // Отправляем запрос в API и получаем обновлённые данные карточки
+  //   api.changeLikeCardStatus(card._id, !isLiked).then((newCard) => {
+  //     setCards((state) => state.map((c) => c._id === card._id ? newCard : c));
+  // });
+    if (isLiked){ //если карточка с лайком ==> удали лайк
+      api.deleteLike(card.cardId)
+      .then(newCard => { 
+        setCards((state) => state.map((item) => 
+        item.cardId === card.cardId ? newCard : item
+        ));
+      })
+      .catch(err => console.log(`Ошибка...: ${err}`))
+    } else { // если лайка нет ==> поставь лайк
+        api.addLike(card.cardId)
+          .then(newCard => { 
+            //console.log(' поставить лайк', newCard)
+            setCards((stateCards) => stateCards.map((item) => 
+            item.cardId === card.cardId ? newCard : item
+            ));
+          })
+          .catch(err => console.log(`Ошибка...: ${err}`))
+      } 
+  }
+
+  function handleDeleteCard(card) {
+    api.deleteCard(card.cardId)
+      .then((res) => {
+        console.log('удалить карточку', res)
+        setCards((stateCards) => stateCards.filter((item) => 
+        item.cardId !== card.cardId))
+      })
+      .catch(err => console.log(`Ошибка...: ${err}`))
+  }
+
   function handleEditAvatarClick() {
     setIsEditAvatarPopupOpen(true);
   }
@@ -67,38 +104,6 @@ function App() {
   function handleCardClick(card) {
     // console.log(selectedCard)
     setSelectedCard(card);
-  }
-
-  function handleCardLike(card) { // Снова проверяем, есть ли уже лайк на этой карточке
-    const isLiked = card.likes.some(user => user._id === currentUser.userId); // Отправляем запрос в API и получаем обновлённые данные карточки
-    
-    if (isLiked){ //если карточка с лайком ==> удали лайк
-      api.deleteLike(card.cardId)
-      .then(newCard => { 
-        setCards((state) => state.map((item) => 
-        item._id === card.cardId ? newCard : item
-        ));
-      })
-      .catch(err => console.log(err))
-    } else { // если лайка нет ==> поставь лайк
-        api.addLike(card.cardId)
-          .then(newCard => { 
-            //console.log(' поставить лайк', newCard)
-            setCards((state) => state.map((item) => 
-            item._id === card.cardId ? newCard : item
-            ));
-          })
-          .catch(err => console.log(err))
-      } 
-  }
-
-  function handleDeleteCard(card) {
-    api.deleteCard(card.cardId)
-      .then(() => {
-        //console.log('удалить карточку', res)
-        setCards(() => cards.filter.map(item => item.cardId !== card.cardId))
-      })
-      .catch(err => console.log(err))
   }
 
   function closeAllPopups() {
