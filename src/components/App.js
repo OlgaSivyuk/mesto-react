@@ -19,8 +19,12 @@ function App() {
       api
         .getProfile()
         .then((userData) => {
-          //console.log("res", userData)
-          setCurrentUser(userData)
+          console.log("res", userData)
+          setCurrentUser({...userData,
+            userName: userData.name,
+            userDescription: userData.about,
+            userAvatar: userData.avatar,
+          })
         })
         .catch((err) => console.log(err));
     }, []); // ПР11 создали эффект при монтировании, который будет вызывать api.getUserInfo и обновлять стейт-переменную из полученного значения
@@ -31,7 +35,7 @@ function App() {
     api
       .getUsersCards()
       .then((cardList) => {
-        //console.log("res", res)
+        //console.log("res", cardList)
         const usersCard = cardList.map((card) => {
           return {
             name: card.name,
@@ -66,7 +70,7 @@ function App() {
   }
 
   function handleCardLike(card) { // Снова проверяем, есть ли уже лайк на этой карточке
-    const isLiked = card.likes.some(item => item._id === currentUser._id); // Отправляем запрос в API и получаем обновлённые данные карточки
+    const isLiked = card.likes.some(user => user._id === currentUser.userId); // Отправляем запрос в API и получаем обновлённые данные карточки
     
     if (isLiked){ //если карточка с лайком ==> удали лайк
       api.deleteLike(card.cardId)
@@ -79,6 +83,7 @@ function App() {
     } else { // если лайка нет ==> поставь лайк
         api.addLike(card.cardId)
           .then(newCard => { 
+            //console.log(' поставить лайк', newCard)
             setCards((state) => state.map((item) => 
             item._id === card.cardId ? newCard : item
             ));
@@ -86,14 +91,15 @@ function App() {
           .catch(err => console.log(err))
       } 
   }
-    // api
-    //   .addLike(cardId, !isLiked)
-    //   .then((newCard) => {
-    //   setCards((state) => state.map((c) => 
-    //   c._id === cardId ? newCard : c
-    //   ));
-    // });
-  
+
+  function handleDeleteCard(card) {
+    api.deleteCard(card.cardId)
+      .then(() => {
+        //console.log('удалить карточку', res)
+        setCards(() => cards.filter.map(item => item.cardId !== card.cardId))
+      })
+      .catch(err => console.log(err))
+  }
 
   function closeAllPopups() {
     setIsEditAvatarPopupOpen(false);
@@ -112,6 +118,7 @@ function App() {
         onAddPlace={handleAddPlaceClick}
         onCardClick={handleCardClick}
         onCardLike={handleCardLike}
+        onCardDelete={handleDeleteCard}
         cards={cards}
       />
       <Footer />

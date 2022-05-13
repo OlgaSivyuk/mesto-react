@@ -3,7 +3,7 @@ import React, { useContext } from "react";
 import Card from "./Card.js";
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
 
-function Main({ onEditAvatar, onEditProfile, onAddPlace, onCardClick, onCardLike , cards}) {
+function Main({ onEditAvatar, onEditProfile, onAddPlace, onCardClick, onCardLike , cards, onCardDelete}) {
   const currentUser = useContext(CurrentUserContext); // Подписываемся на контекст CurrentUserContext
   // const [userName, setUserName] = useState("");
   // const [userDescription, setUserDescription] = useState("");
@@ -54,7 +54,8 @@ function Main({ onEditAvatar, onEditProfile, onAddPlace, onCardClick, onCardLike
               key={card.cardId} 
               card={card} 
               onCardClick={onCardClick} 
-              onCardLike={onCardLike} />
+              onCardLike={onCardLike}
+              onCardDelete={onCardDelete} />
           );
         })}
       </section>
