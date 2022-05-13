@@ -3,6 +3,8 @@ import { api } from "../utils/Api.js";
 import Header from "./Header";
 import Main from "./Main";
 import PopupWithForm from "./PopupWithForm";
+import EditProfilePopup from "./EditProfilePopup";
+import EditAvatarPopup from "./EditAvatarPopup";
 import ImagePopup from "./ImagePopup";
 import Footer from "./Footer";
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
@@ -26,10 +28,24 @@ function App() {
             userAvatar: userData.avatar,
           })
         })
-        .catch((err) => console.log(err));
+        .catch((err) => console.log(`Ошибка...: ${err}`));
     }, []); // ПР11 создали эффект при монтировании, который будет вызывать api.getUserInfo и обновлять стейт-переменную из полученного значения
 
+    function handleUpdateUser (name, about){
+      api.editProfile(name, about)
+      .then(userData => {
+        setCurrentUser(userData);
+        closeAllPopups();
+      }).catch(err => console.error(`Ошибка...: ${err}`));
+    };
 
+    function handleUpdateAvatar (avatar){
+      api.editProfileAvatar(avatar)
+      .then(userData => {
+        setCurrentUser(userData);
+        closeAllPopups();
+      }).catch(err => console.error(`Ошибка...: ${err}`));
+    };
 
   useEffect(() => {
     api
@@ -48,7 +64,7 @@ function App() {
         //console.log('usersCard', usersCard)
         setCards(usersCard);
       })
-      .catch((err) => console.log(err));
+      .catch((err) => console.log(`Ошибка...: ${err}`));
   }, []);
 
 
@@ -128,67 +144,19 @@ function App() {
       />
       <Footer />
       {/* Модалка редактирования профиля */}
-      <PopupWithForm
-        name="profile"
-        isOpen={isEditProfilePopupOpen}
-        title="Редактировать профиль"
-        id="form-profile"
-        formName="edit-profile-form"
-        buttonText="Сохранить"
-        onClose={closeAllPopups}>
-            <input
-              type="text"
-              id="name"
-              name="name"
-              className="popup__input"
-              placeholder="Имя"
-              minLength="2"
-              maxLength="40"
-              required 
-            />
-            <span 
-              id="error-name" 
-              className="popup__error">
-            </span>
-            <input
-              type="text"
-              id="bio"
-              name="bio"
-              className="popup__input"
-              placeholder="О себе"
-              minLength="2"
-              maxLength="200"
-              required
-            />
-            <span 
-              id="error-bio" 
-              className="popup__error">
-            </span>
-        </PopupWithForm>
+      <EditProfilePopup
+        isOpen={isEditProfilePopupOpen} 
+        onClose={closeAllPopups}
+        onUpdateUser={handleUpdateUser}>
+      </EditProfilePopup>
 
       {/* Модалка смены аватара */}
-      <PopupWithForm
-        name="profile-avatar"
+      <EditAvatarPopup
         isOpen={isEditAvatarPopupOpen}
-        title="Обновить автар"
-        id="form-profile-avatar"
-        formName="edit-profile-avatar"
-        buttonText="Сохранить"
-        onClose={closeAllPopups}>
-            <input
-              type="url"
-              id="profile-avatar-link"
-              name="profile-avatar-link"
-              className="popup__input popup__input_profile-avatar_link"
-              placeholder="Ссылка на картинку"
-              required
-            />
-            <span
-              id="error-profile-avatar-link"
-              className="popup__error">
-            </span>
-      </PopupWithForm>
-
+        onClose={closeAllPopups}
+        onUpdateAvatar={handleUpdateAvatar}>
+      </EditAvatarPopup>
+      
       {/* Модалка добавления карточки */}
       <PopupWithForm
         name="place"
