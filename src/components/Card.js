@@ -27,7 +27,7 @@ function Card({ card, onCardClick, onCardLike, onCardDelete }) {
     onCardLike(card)
   }
 
-  function handleDeletClick() {
+  function handleDeleteClick() {
     onCardDelete(card)
   }
   
@@ -54,7 +54,7 @@ function Card({ card, onCardClick, onCardLike, onCardDelete }) {
       <button
         type="button"
         className={cardDeleteButtonClassName}
-        onClick={handleDeletClick}
+        onClick={handleDeleteClick}
         arial-label="Удалить"
       ></button>
     </article>

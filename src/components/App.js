@@ -2,11 +2,12 @@ import React, { useState, useEffect } from "react";
 import { api } from "../utils/Api.js";
 import Header from "./Header";
 import Main from "./Main";
-import PopupWithForm from "./PopupWithForm";
+//import PopupWithForm from "./PopupWithForm"; // все перенесли и больше не используется
 import EditProfilePopup from "./EditProfilePopup";
 import EditAvatarPopup from "./EditAvatarPopup";
 import AddPlacePopup from "./AddPlacePopup"
 import ImagePopup from "./ImagePopup";
+import DeleteCardConfirmPopup from "./DeleteCardConfirmPopup";
 import Footer from "./Footer";
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
 
@@ -14,6 +15,7 @@ function App() {
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false);
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false);
   const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = useState(false);
+  const [isDeleteCardConfirmPopupOpen, setIsDeleteCardConfirmPopupOpen] = useState(false);
   const [selectedCard, setSelectedCard] = useState(null);
   const [currentUser, setCurrentUser] = useState({}); // ПР11 создали переменную состояния currentUser
   const [cards, setCards] = useState([]); // ПР11 перенесла карточки в корневой компонент
@@ -101,8 +103,8 @@ function App() {
 
   function handleDeleteCard(card) {
     api.deleteCard(card.cardId)
-      .then((res) => {
-        console.log('удалить карточку', res)
+      .then(() => {
+        //console.log('удалить карточку', res)
         setCards((stateCards) => stateCards.filter((item) => 
         item.cardId !== card.cardId))
       })
@@ -126,11 +128,16 @@ function App() {
     setSelectedCard(card);
   };
 
+  function handleTrashbinClick(){
+    setIsDeleteCardConfirmPopupOpen(true)
+  }
+
   function closeAllPopups() {
     setIsEditAvatarPopupOpen(false);
     setIsEditProfilePopupOpen(false);
     setIsAddPlacePopupOpen(false);
     setSelectedCard(null);
+    setIsDeleteCardConfirmPopupOpen(false);
   };
 
   return (
@@ -143,7 +150,8 @@ function App() {
         onAddPlace={handleAddPlaceClick}
         onCardClick={handleCardClick}
         onCardLike={handleCardLike}
-        onCardDelete={handleDeleteCard}
+        // onCardDelete={handleDeleteCard} // меняем механику, переносим в компонент DeleteCardConfirmPopup
+        onCardDelete={handleTrashbinClick}
         cards={cards}
       />
       <Footer />
@@ -169,14 +177,12 @@ function App() {
       </AddPlacePopup>
 
       {/* Модалка удаления карточки */}
-      <PopupWithForm
-        name="delete-card"
-        title="Вы уверены?"
-        id="form-delete-card"
-        formName="delete-place-card"
-        buttonText="Да"
+      <DeleteCardConfirmPopup
+        isOpen={isDeleteCardConfirmPopupOpen}
         onClose={closeAllPopups}
-      />
+        onConfirmCardDelete={handleDeleteCard}>
+      </DeleteCardConfirmPopup>
+      
 
       {/* Модалка открытия картинки */}
       <ImagePopup 
