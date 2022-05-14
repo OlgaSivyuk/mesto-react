@@ -9,6 +9,7 @@ function EditProfilePopup ({isOpen, onClose, onUpdateUser}){
   
   
   function handleNameChange(e) {
+    //console.log(e.target.value);
     setName(e.target.value);
   }
 
@@ -16,11 +17,10 @@ function EditProfilePopup ({isOpen, onClose, onUpdateUser}){
     setDescription(e.target.value);
   }
 
-  function handleSubmit(e) {// Запрещаем браузеру переходить по адресу формы
-    e.preventDefault();
-    
+  function handleSubmit(event) {// Запрещаем браузеру переходить по адресу формы
+    event.preventDefault();
     onUpdateUser({ // Передаём значения управляемых компонентов во внешний обработчик
-      name,
+      name: name,
       about: description,
     });
   }
@@ -28,7 +28,7 @@ function EditProfilePopup ({isOpen, onClose, onUpdateUser}){
   useEffect(() => { // После загрузки текущего пользователя из API его данные будут использованы в управляемых компонентах.
     setName(currentUser.name);
     setDescription(currentUser.about);
-  }, [currentUser, isOpen]);
+  }, [currentUser]);
 
   return (
     <PopupWithForm
@@ -49,7 +49,7 @@ function EditProfilePopup ({isOpen, onClose, onUpdateUser}){
               minLength="2"
               maxLength="40"
               required
-              defaultValue={name}
+              defaultValue={name || ''}
               onChange={handleNameChange} 
             />
             <span 
@@ -65,7 +65,7 @@ function EditProfilePopup ({isOpen, onClose, onUpdateUser}){
               minLength="2"
               maxLength="200"
               required
-              defaultValue={description}
+              defaultValue={description || ''}
               onChange={handleDescriptionChange}
             />
             <span 

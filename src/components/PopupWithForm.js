@@ -1,6 +1,6 @@
 import React from "react";
 
-function PopupWithForm({ name, title, id, formName, buttonText, children, onClose, isOpen,}) {
+function PopupWithForm({ name, title, id, formName, buttonText, children, onClose, isOpen, onSubmit}) {
   
   return (
     <div className={`popup popup_type_${name} ${isOpen ? "popup_opened" : " "}`}>
@@ -8,14 +8,17 @@ function PopupWithForm({ name, title, id, formName, buttonText, children, onClos
         <h3 className="popup__title">{title}</h3>
         <form
           className={`popup__form popup__form_${name}`}
-          id={id}
-          autoComplete="off"
           name={formName}
-          noValidate >  {/* рекомендуется убрать noValidate чтобы работала внутренняя валидация браузера, и не было возможности отправить невалидные данные на сервер */}
+          id={id}
+          onSubmit={onSubmit}
+          autoComplete="off"
+          noValidate>  {/* рекомендуется убрать noValidate чтобы работала внутренняя валидация браузера, и не было возможности отправить невалидные данные на сервер */}
          
           {children}
 
-          <button type="submit" className="popup__submit">
+          <button 
+            type="submit" 
+            className="popup__submit">
             {buttonText}
           </button>
         </form>

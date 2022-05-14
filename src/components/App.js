@@ -20,7 +20,7 @@ function App() {
   useEffect(() => {
       api
         .getProfile()
-        .then((userData) => {
+        .then(userData => {
           //console.log("res", userData)
           setCurrentUser({...userData,
             userName: userData.name,
@@ -31,15 +31,16 @@ function App() {
         .catch((err) => console.log(`Ошибка...: ${err}`));
     }, []); // ПР11 создали эффект при монтировании, который будет вызывать api.getUserInfo и обновлять стейт-переменную из полученного значения
 
-    function handleUpdateUser (name, about){
+    function handleUpdateUser ({name, about}){
       api.editProfile(name, about)
       .then(userData => {
+        console.log("res", userData)
         setCurrentUser(userData);
         closeAllPopups();
       }).catch(err => console.error(`Ошибка...: ${err}`));
     };
 
-    function handleUpdateAvatar (avatar){
+    function handleUpdateAvatar ({avatar}){
       api.editProfileAvatar(avatar)
       .then(userData => {
         setCurrentUser(userData);

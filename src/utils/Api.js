@@ -4,7 +4,7 @@ class Api {
     this._baseUrl = baseUrl; // https://mesto.nomoreparties.co/v1/cohort-39/ подставляется в fetch перед хвостом
   }
   
-  getProfile() { // метод для подстановки данных профиля // по умолчанию Get
+  getProfile() { 
     //console.log('getProfile');
     return fetch(`${this._baseUrl}/users/me`, { // применяем шаблонные строки ${}
       headers: this._headers
@@ -13,7 +13,7 @@ class Api {
       Promise.reject(res.status))
   }
   
-  getUsersCards() { // метод для подстановки данных карточек // по умолчанию Get
+  getUsersCards() { 
     return fetch(`${this._baseUrl}/cards`, { // 1. отправляем headers
         headers: this._headers
     })
@@ -21,9 +21,9 @@ class Api {
       Promise.reject(res.status)) //4. если ответ не успешный,  то проваливаемся в ошибку  выводим catch
   }
   
-  editProfile(name, about) { // метод для внесения изменений в профиль // метод patch
+  editProfile(name, about) { 
     return fetch(`${this._baseUrl}/users/me`, {
-        method: "PATCH", // этот метод значит, что я меняю текущие данные на сервере
+        method: "PATCH", 
         headers: this._headers,
         body: JSON.stringify({ // делаем из объекта строку для передачи данных
             name,
@@ -34,7 +34,7 @@ class Api {
       Promise.reject(res.status))
   }
 
-  addNewCard(name, link) { // метод добавления новой карточки // метод post
+  addNewCard(name, link) { 
     return fetch(`${this._baseUrl}/cards`, {
         method: "POST", // этот метод принимает данные на хранение, используется при загрузке файлов
         headers: this._headers,
@@ -47,7 +47,7 @@ class Api {
       Promise.reject(res.status))
   }
 
-  deleteCard(id) { // метод удаления // метод delete
+  deleteCard(id) { 
     return fetch(`${this._baseUrl}/cards/${id}`,{ // применяем шаблонные строки и id, который забираем из карточки во время удаления
         method: "DELETE",
         headers: this._headers,
@@ -56,7 +56,7 @@ class Api {
       Promise.reject(res.status))
   }
 
-  deleteLike(id) { // метод удаления // метод delete
+  deleteLike(id) { 
     return fetch(`${this._baseUrl}/cards/${id}/likes`,{ 
         method: "DELETE",
         headers: this._headers,
@@ -65,7 +65,7 @@ class Api {
       Promise.reject(res.status))
   }
 
-  addLike(id) { // метод добавления // метод put
+  addLike(id) { 
     return fetch(`${this._baseUrl}/cards/${id}/likes`,{ 
         method: "PUT",
         headers: this._headers,
@@ -74,7 +74,7 @@ class Api {
       Promise.reject(res.status))
   }
 
-  editProfileAvatar(avatar) { // метод добавления // метод put
+  editProfileAvatar(avatar) { 
     return fetch(`${this._baseUrl}/users/me/avatar`,{ 
         method: "PATCH",
         headers: this._headers,

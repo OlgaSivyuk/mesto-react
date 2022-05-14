@@ -13,9 +13,9 @@ function EditAvatarPopup ({isOpen, onClose, onUpdateAvatar }){
     });
   } 
 
-  useEffect(() => { // После загрузки текущего пользователя из API его данные будут использованы в управляемых компонентах.
+  useEffect(() => { 
     avatarRef.current.value = "";
-  }, [isOpen]);
+  }, []);
 
   return (
   <PopupWithForm
@@ -28,13 +28,13 @@ function EditAvatarPopup ({isOpen, onClose, onUpdateAvatar }){
         onClose={onClose}
         onSubmit={handleSubmit}>
             <input
+              ref={avatarRef}
               type="url"
               id="profile-avatar-link"
               name="profile-avatar-link"
               className="popup__input popup__input_profile-avatar_link"
               placeholder="Ссылка на картинку"
               required
-              ref={avatarRef}
             />
             <span
               id="error-profile-avatar-link"
