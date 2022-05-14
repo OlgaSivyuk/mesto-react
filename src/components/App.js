@@ -19,6 +19,7 @@ function App() {
   const [selectedCard, setSelectedCard] = useState(null);
   const [currentUser, setCurrentUser] = useState({}); // ПР11 создали переменную состояния currentUser
   const [cards, setCards] = useState([]); // ПР11 перенесла карточки в корневой компонент
+  const [removeCard, setRemoveCard] = useState(null);
 
   useEffect(() => {
       api.getProfile()
@@ -101,12 +102,14 @@ function App() {
       } 
   };
 
-  function handleDeleteCard(card) {
-    api.deleteCard(card.cardId)
+  function handleDeleteCard() {
+    api.deleteCard(removeCard.cardId)
+    //console.log('pr', removeCard.cardId)
       .then(() => {
         //console.log('удалить карточку', res)
         setCards((stateCards) => stateCards.filter((item) => 
-        item.cardId !== card.cardId))
+        item.cardId !== removeCard.cardId));
+        closeAllPopups();
       })
       .catch(err => console.log(`Ошибка...: ${err}`))
   };
@@ -128,8 +131,9 @@ function App() {
     setSelectedCard(card);
   };
 
-  function handleTrashbinClick(){
+  function handleTrashbinClick(card){
     setIsDeleteCardConfirmPopupOpen(true)
+    setRemoveCard(card)
   }
 
   function closeAllPopups() {
