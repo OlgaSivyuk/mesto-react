@@ -28,7 +28,7 @@ function EditProfilePopup ({isOpen, onClose, onUpdateUser}){
   useEffect(() => { // После загрузки текущего пользователя из API его данные будут использованы в управляемых компонентах.
     setName(currentUser.name);
     setDescription(currentUser.about);
-  }, [currentUser]);
+  }, [currentUser, isOpen]);
 
   return (
     <PopupWithForm
@@ -49,7 +49,7 @@ function EditProfilePopup ({isOpen, onClose, onUpdateUser}){
               minLength="2"
               maxLength="40"
               required
-              defaultValue={name || ''}
+              defaultValue={name}
               onChange={handleNameChange} 
             />
             <span 
@@ -65,7 +65,7 @@ function EditProfilePopup ({isOpen, onClose, onUpdateUser}){
               minLength="2"
               maxLength="200"
               required
-              defaultValue={description || ''}
+              defaultValue={description}
               onChange={handleDescriptionChange}
             />
             <span 

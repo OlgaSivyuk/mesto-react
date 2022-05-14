@@ -5,6 +5,7 @@ import Main from "./Main";
 import PopupWithForm from "./PopupWithForm";
 import EditProfilePopup from "./EditProfilePopup";
 import EditAvatarPopup from "./EditAvatarPopup";
+import AddPlacePopup from "./AddPlacePopup"
 import ImagePopup from "./ImagePopup";
 import Footer from "./Footer";
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
@@ -18,8 +19,7 @@ function App() {
   const [cards, setCards] = useState([]); // ПР11 перенесла карточки в корневой компонент
 
   useEffect(() => {
-      api
-        .getProfile()
+      api.getProfile()
         .then(userData => {
           //console.log("res", userData)
           setCurrentUser({...userData,
@@ -49,8 +49,7 @@ function App() {
     };
 
   useEffect(() => {
-    api
-      .getUsersCards()
+    api.getUsersCards()
       .then((cardList) => {
         //console.log("res", cardList)
         const usersCard = cardList.map((card) => {
@@ -68,14 +67,18 @@ function App() {
       .catch((err) => console.log(`Ошибка...: ${err}`));
   }, []);
 
+  function handleAddPlaceSubmit({name, link}) {
+    api.addNewCard(name, link)
+    .then (newCard => {
+      setCards([newCard, ...cards]);
+      closeAllPopups();
+    }).catch(err => console.error(`Ошибка...: ${err}`));
+  };
+
 
   function handleCardLike(card) { // Снова проверяем, есть ли уже лайк на этой карточке
     const isLiked = card.likes.some(user => user._id === currentUser._id); // Отправляем запрос в API и получаем обновлённые данные карточки
     
-  //   // Отправляем запрос в API и получаем обновлённые данные карточки
-  //   api.changeLikeCardStatus(card._id, !isLiked).then((newCard) => {
-  //     setCards((state) => state.map((c) => c._id === card._id ? newCard : c));
-  // });
     if (isLiked){ //если карточка с лайком ==> удали лайк
       api.deleteLike(card.cardId)
       .then(newCard => { 
@@ -94,7 +97,7 @@ function App() {
           })
           .catch(err => console.log(`Ошибка...: ${err}`))
       } 
-  }
+  };
 
   function handleDeleteCard(card) {
     api.deleteCard(card.cardId)
@@ -104,31 +107,31 @@ function App() {
         item.cardId !== card.cardId))
       })
       .catch(err => console.log(`Ошибка...: ${err}`))
-  }
+  };
 
   function handleEditAvatarClick() {
     setIsEditAvatarPopupOpen(true);
-  }
+  };
 
   function handleEditProfileClick() {
     setIsEditProfilePopupOpen(true);
-  }
+  };
 
   function handleAddPlaceClick() {
     setIsAddPlacePopupOpen(true);
-  }
+  };
 
   function handleCardClick(card) {
     // console.log(selectedCard)
     setSelectedCard(card);
-  }
+  };
 
   function closeAllPopups() {
     setIsEditAvatarPopupOpen(false);
     setIsEditProfilePopupOpen(false);
     setIsAddPlacePopupOpen(false);
     setSelectedCard(null);
-  }
+  };
 
   return (
     <CurrentUserContext.Provider value={currentUser}>
@@ -159,41 +162,11 @@ function App() {
       </EditAvatarPopup>
       
       {/* Модалка добавления карточки */}
-      <PopupWithForm
-        name="place"
+      <AddPlacePopup
         isOpen={isAddPlacePopupOpen}
-        title="Новое место"
-        id="form-place"
-        formName="edit-place-form"
-        buttonText="Создать"
-        onClose={closeAllPopups}>
-            <input
-              type="text"
-              id="place-name"
-              name="place-name"
-              className="popup__input popup__input_place-name"
-              placeholder="Название"
-              minLength="2"
-              maxLength="30"
-              required
-            />
-            <span 
-              id="error-place-name" 
-              className="popup__error">
-            </span>
-            <input
-              type="url"
-              id="place-link"
-              name="place-link"
-              className="popup__input popup__input_place_link"
-              placeholder="Ссылка на картинку"
-              required
-            />
-            <span 
-              id="error-place-link" 
-              className="popup__error">
-            </span>
-      </PopupWithForm>
+        onClose={closeAllPopups}
+        onAddPlace={handleAddPlaceSubmit}>
+      </AddPlacePopup>
 
       {/* Модалка удаления карточки */}
       <PopupWithForm
@@ -206,7 +179,9 @@ function App() {
       />
 
       {/* Модалка открытия картинки */}
-      <ImagePopup card={selectedCard} onClose={closeAllPopups} />
+      <ImagePopup 
+        card={selectedCard} 
+        onClose={closeAllPopups} />
     </div>
     </CurrentUserContext.Provider>
   );
