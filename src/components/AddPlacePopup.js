@@ -46,7 +46,7 @@ function AddPlacePopup ({isOpen, onClose, onAddPlace }){
               maxLength="30"
               required
               onChange={handleNameChange}
-              defaultValue={name}
+              value={name || ""}
             />
             <span 
               id="error-place-name" 
@@ -60,7 +60,7 @@ function AddPlacePopup ({isOpen, onClose, onAddPlace }){
               placeholder="Ссылка на картинку"
               required
               onChange={handleLinkChange}
-              defaultValue={link}
+              value={link || ""}
             />
             <span 
               id="error-place-link" 

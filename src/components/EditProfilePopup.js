@@ -7,7 +7,6 @@ function EditProfilePopup ({isOpen, onClose, onUpdateUser}){
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   
-  
   function handleNameChange(e) {
     setName(e.target.value);
   }
@@ -48,7 +47,7 @@ function EditProfilePopup ({isOpen, onClose, onUpdateUser}){
               minLength="2"
               maxLength="40"
               required
-              defaultValue={name}
+              value={name || ""}
               onChange={handleNameChange} 
             />
             <span 
@@ -64,7 +63,7 @@ function EditProfilePopup ({isOpen, onClose, onUpdateUser}){
               minLength="2"
               maxLength="200"
               required
-              defaultValue={description}
+              value={description || ""}
               onChange={handleDescriptionChange}
             />
             <span 

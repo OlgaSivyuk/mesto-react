@@ -11,10 +11,8 @@ function PopupWithForm({ name, title, id, formName, buttonText, children, onClos
           name={formName}
           id={id}
           onSubmit={onSubmit}
-          autoComplete="off"
-          noValidate>  
-          {/* рекомендуется убрать noValidate чтобы работала внутренняя валидация браузера, 
-          но она не работает, TO DO => настроить валидацию */}
+          autoComplete="off">  
+          {/* TO DO => настроить валидацию по рекомендации от ревьюера */}
          
           {children}
 

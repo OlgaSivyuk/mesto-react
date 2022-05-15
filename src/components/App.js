@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { api } from "../utils/Api.js";
 import Header from "./Header";
 import Main from "./Main";
@@ -20,7 +20,7 @@ function App() {
   const [cards, setCards] = useState([]); 
   const [removeCard, setRemoveCard] = useState(null);
 
-  useEffect(() => {
+  useEffect(() => { // попробовать еще раз прописать данные пользователя и карточек в одном useEffect
       api.getProfile()
         .then(userData => {
           setCurrentUser({...userData,
