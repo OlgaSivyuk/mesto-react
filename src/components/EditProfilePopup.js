@@ -3,13 +3,12 @@ import PopupWithForm from "./PopupWithForm";
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
 
 function EditProfilePopup ({isOpen, onClose, onUpdateUser}){
-  const currentUser = useContext(CurrentUserContext); // ПР11 Подписываемся на контекст CurrentUserContext
+  const currentUser = useContext(CurrentUserContext);
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   
   
   function handleNameChange(e) {
-    //console.log(e.target.value);
     setName(e.target.value);
   }
 
@@ -17,15 +16,15 @@ function EditProfilePopup ({isOpen, onClose, onUpdateUser}){
     setDescription(e.target.value);
   }
 
-  function handleSubmit(event) {// Запрещаем браузеру переходить по адресу формы
+  function handleSubmit(event) {
     event.preventDefault();
-    onUpdateUser({ // Передаём значения управляемых компонентов во внешний обработчик
+    onUpdateUser({
       name: name,
       about: description,
     });
   }
 
-  useEffect(() => { // После загрузки текущего пользователя из API его данные будут использованы в управляемых компонентах.
+  useEffect(() => { 
     setName(currentUser.name);
     setDescription(currentUser.about);
   }, [currentUser, isOpen]);

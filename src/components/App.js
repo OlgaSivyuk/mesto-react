@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { api } from "../utils/Api.js";
 import Header from "./Header";
 import Main from "./Main";
-//import PopupWithForm from "./PopupWithForm"; // все перенесли и больше не используется
 import EditProfilePopup from "./EditProfilePopup";
 import EditAvatarPopup from "./EditAvatarPopup";
 import AddPlacePopup from "./AddPlacePopup"
@@ -17,14 +16,13 @@ function App() {
   const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = useState(false);
   const [isDeleteCardConfirmPopupOpen, setIsDeleteCardConfirmPopupOpen] = useState(false);
   const [selectedCard, setSelectedCard] = useState(null);
-  const [currentUser, setCurrentUser] = useState({}); // ПР11 создали переменную состояния currentUser
-  const [cards, setCards] = useState([]); // ПР11 перенесла карточки в корневой компонент
+  const [currentUser, setCurrentUser] = useState({}); 
+  const [cards, setCards] = useState([]); 
   const [removeCard, setRemoveCard] = useState(null);
 
   useEffect(() => {
       api.getProfile()
         .then(userData => {
-          //console.log("res", userData)
           setCurrentUser({...userData,
             userName: userData.name,
             userDescription: userData.about,
@@ -32,12 +30,11 @@ function App() {
           })
         })
         .catch((err) => console.log(`Ошибка...: ${err}`));
-    }, []); // ПР11 создали эффект при монтировании, который будет вызывать api.getUserInfo и обновлять стейт-переменную из полученного значения
+    }, []); 
 
     function handleUpdateUser ({name, about}){
       api.editProfile(name, about)
       .then(userData => {
-        //console.log("res", userData)
         setCurrentUser({...userData,
           userName: userData.name,
           userDescription: userData.about,
@@ -51,8 +48,7 @@ function App() {
       api.editProfileAvatar(avatar)
       .then(userData => {
         setCurrentUser({...userData,
-          userName: userData.name,
-          userDescription: userData.about,
+          
           userAvatar: userData.avatar
         });
         closeAllPopups();
@@ -62,7 +58,6 @@ function App() {
   useEffect(() => {
     api.getUsersCards()
       .then((cardList) => {
-        //console.log("res", cardList)
         const usersCard = cardList.map((card) => {
           return {
             name: card.name,
@@ -72,7 +67,6 @@ function App() {
             ownerId: card.owner._id
           };
         });
-        //console.log('usersCard', usersCard)
         setCards(usersCard);
       })
       .catch((err) => console.log(`Ошибка...: ${err}`));
@@ -93,15 +87,10 @@ function App() {
   };
 
 
-  function handleCardLike(card) { // Снова проверяем, есть ли уже лайк на этой карточке
-    const isLiked = card.likes.some(user => user._id === currentUser._id); // Отправляем запрос в API и получаем обновлённые данные карточки
-    
-  //   // Отправляем запрос в API и получаем обновлённые данные карточки
-  //   api.changeLikeCardStatus(card._id, !isLiked).then((newCard) => {
-  //     setCards((state) => state.map((c) => c._id === card._id ? newCard : c));
-  // });
+  function handleCardLike(card) { 
+    const isLiked = card.likes.some(user => user._id === currentUser._id); 
 
-    if (isLiked){ //если карточка с лайком ==> удали лайк
+    if (isLiked){ 
       api.deleteLike(card.cardId)
       .then(newCard => { 
         setCards((state) => state.map((item) => {
@@ -114,15 +103,12 @@ function App() {
               ownerId: newCard.owner._id
             }
           } else return item;
-        }
-        // item.cardId === card.cardId ? newCard : item
-        ));
+        }));
       })
       .catch(err => console.log(`Ошибка...: ${err}`))
-    } else { // если лайка нет ==> поставь лайк
+    } else {
         api.addLike(card.cardId)
           .then(newCard => { 
-            //console.log(' поставить лайк', newCard)
             setCards((stateCards) => stateCards.map((item) => {
               if(item.cardId === card.cardId){
                 return{
@@ -133,9 +119,7 @@ function App() {
                   ownerId: newCard.owner._id
                 }
               } else return item;
-            }
-            //item.cardId === card.cardId ? newCard : item
-            ));
+          }));
           })
           .catch(err => console.log(`Ошибка...: ${err}`))
       } 
@@ -143,9 +127,7 @@ function App() {
 
   function handleDeleteCard() {
     api.deleteCard(removeCard.cardId)
-    //console.log('pr', removeCard.cardId)
       .then(() => {
-        //console.log('удалить карточку', res)
         setCards((stateCards) => stateCards.filter((item) => 
         item.cardId !== removeCard.cardId));
         closeAllPopups();
@@ -166,7 +148,6 @@ function App() {
   };
 
   function handleCardClick(card) {
-    // console.log(selectedCard)
     setSelectedCard(card);
   };
 
@@ -193,7 +174,6 @@ function App() {
         onAddPlace={handleAddPlaceClick}
         onCardClick={handleCardClick}
         onCardLike={handleCardLike}
-        // onCardDelete={handleDeleteCard} // меняем механику, переносим в компонент DeleteCardConfirmPopup
         onCardDelete={handleTrashbinClick}
         cards={cards}
       />

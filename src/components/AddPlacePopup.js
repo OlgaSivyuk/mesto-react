@@ -15,13 +15,13 @@ function AddPlacePopup ({isOpen, onClose, onAddPlace }){
 
     function handleSubmit(event) {
         event.preventDefault();
-        onAddPlace({ // Передаём значения управляемых компонентов во внешний обработчик
+        onAddPlace({ 
             name: name,
             link: link,
         });
     }
 
-    useEffect(() => { // После загрузки текущего пользователя из API его данные будут использованы в управляемых компонентах.
+    useEffect(() => { 
         setName('');
         setLink('');
     }, [isOpen]);

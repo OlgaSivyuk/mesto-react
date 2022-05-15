@@ -4,12 +4,7 @@ import Card from "./Card.js";
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
 
 function Main({ onEditAvatar, onEditProfile, onAddPlace, onCardClick, onCardLike , cards, onCardDelete}) {
-  const currentUser = useContext(CurrentUserContext); // Подписываемся на контекст CurrentUserContext
-  // const [userName, setUserName] = useState("");
-  // const [userDescription, setUserDescription] = useState("");
-  // const [userAvatar, setUserAvatar] = useState("");
-  //const [cards, setCards] = useState([]); // добавляем переменную стейта с пустым массивом в качестве переменной по умолчанию
-
+  const currentUser = useContext(CurrentUserContext); 
 
   return (
     <main className="content">
@@ -64,54 +59,3 @@ function Main({ onEditAvatar, onEditProfile, onAddPlace, onCardClick, onCardLike
 }
 
 export default Main;
-
-
-// useEffect(() => {
-//   Promise.all([api.getProfile(), api.getUsersCards()])
-//     .then(([userData, cardList]) => {
-//       setUserName(userData.name);
-//       setUserDescription(userData.about);
-//       setUserAvatar(userData.avatar)
-
-//       const usersCard = cardList.map((card) => {
-//         return {
-//           name: card.name,
-//           link: card.link,
-//           likes: card.likes,
-//           cardId: card._id,
-//         }
-//       })
-//       setCards(usersCard)
-//     })
-//     .catch(err => console.log(err));
-// }, [])
-
-// useEffect(() => {
-//     api
-//       .getProfile()
-//       .then((res) => {
-//         setUserName(res.name);
-//         setUserDescription(res.about);
-//         setUserAvatar(res.avatar);
-//       })
-//       .catch((err) => console.log(err));
-//   }, []);
-
-// useEffect(() => {
-  //   api
-  //     .getUsersCards()
-  //     .then((cardList) => {
-  //       //console.log("res", res)
-  //       const usersCard = cardList.map((card) => {
-  //         return {
-  //           name: card.name,
-  //           link: card.link,
-  //           likes: card.likes,
-  //           cardId: card._id,
-  //         };
-  //       });
-  //       //console.log('usersCard', usersCard)
-  //       setCards(usersCard);
-  //     })
-  //     .catch((err) => console.log(err));
-  // }, []);
