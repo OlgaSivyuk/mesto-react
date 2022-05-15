@@ -28,7 +28,7 @@ function App() {
           setCurrentUser({...userData,
             userName: userData.name,
             userDescription: userData.about,
-            userAvatar: userData.avatar,
+            userAvatar: userData.avatar
           })
         })
         .catch((err) => console.log(`Ошибка...: ${err}`));
@@ -37,8 +37,12 @@ function App() {
     function handleUpdateUser ({name, about}){
       api.editProfile(name, about)
       .then(userData => {
-        console.log("res", userData)
-        setCurrentUser(userData);
+        //console.log("res", userData)
+        setCurrentUser({...userData,
+          userName: userData.name,
+          userDescription: userData.about,
+          userAvatar: userData.avatar
+        });
         closeAllPopups();
       }).catch(err => console.error(`Ошибка...: ${err}`));
     };
@@ -46,7 +50,11 @@ function App() {
     function handleUpdateAvatar ({avatar}){
       api.editProfileAvatar(avatar)
       .then(userData => {
-        setCurrentUser(userData);
+        setCurrentUser({...userData,
+          userName: userData.name,
+          userDescription: userData.about,
+          userAvatar: userData.avatar
+        });
         closeAllPopups();
       }).catch(err => console.error(`Ошибка...: ${err}`));
     };
@@ -61,7 +69,7 @@ function App() {
             link: card.link,
             likes: card.likes,
             cardId: card._id,
-            ownerId: card.owner._id,
+            ownerId: card.owner._id
           };
         });
         //console.log('usersCard', usersCard)
@@ -73,7 +81,13 @@ function App() {
   function handleAddPlaceSubmit({name, link}) {
     api.addNewCard(name, link)
     .then (newCard => {
-      setCards([newCard, ...cards]);
+      setCards([{
+        name: newCard.name,
+        link: newCard.link,
+        likes: newCard.likes,
+        cardId: newCard._id,
+        ownerId: newCard.owner._id
+      }, ...cards]);
       closeAllPopups();
     }).catch(err => console.error(`Ошибка...: ${err}`));
   };
@@ -82,11 +96,26 @@ function App() {
   function handleCardLike(card) { // Снова проверяем, есть ли уже лайк на этой карточке
     const isLiked = card.likes.some(user => user._id === currentUser._id); // Отправляем запрос в API и получаем обновлённые данные карточки
     
+  //   // Отправляем запрос в API и получаем обновлённые данные карточки
+  //   api.changeLikeCardStatus(card._id, !isLiked).then((newCard) => {
+  //     setCards((state) => state.map((c) => c._id === card._id ? newCard : c));
+  // });
+
     if (isLiked){ //если карточка с лайком ==> удали лайк
       api.deleteLike(card.cardId)
       .then(newCard => { 
-        setCards((state) => state.map((item) => 
-        item.cardId === card.cardId ? newCard : item
+        setCards((state) => state.map((item) => {
+          if(item.cardId === card.cardId){
+            return{
+              name: newCard.name,
+              link: newCard.link,
+              likes: newCard.likes,
+              cardId: newCard._id,
+              ownerId: newCard.owner._id
+            }
+          } else return item;
+        }
+        // item.cardId === card.cardId ? newCard : item
         ));
       })
       .catch(err => console.log(`Ошибка...: ${err}`))
@@ -94,13 +123,23 @@ function App() {
         api.addLike(card.cardId)
           .then(newCard => { 
             //console.log(' поставить лайк', newCard)
-            setCards((stateCards) => stateCards.map((item) => 
-            item.cardId === card.cardId ? newCard : item
+            setCards((stateCards) => stateCards.map((item) => {
+              if(item.cardId === card.cardId){
+                return{
+                  name: newCard.name,
+                  link: newCard.link,
+                  likes: newCard.likes,
+                  cardId: newCard._id,
+                  ownerId: newCard.owner._id
+                }
+              } else return item;
+            }
+            //item.cardId === card.cardId ? newCard : item
             ));
           })
           .catch(err => console.log(`Ошибка...: ${err}`))
       } 
-  };
+   };
 
   function handleDeleteCard() {
     api.deleteCard(removeCard.cardId)
